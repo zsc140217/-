@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发送邮件表单</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>发送邮件</h2>
+    <form id="emailForm">
+        <label for="name">姓名:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">电子邮件:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="subject">主题:</label>
+        <input type="text" id="subject" name="subject" required>
+
+        <label for="message">消息:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit">发送</button>
+    </form>
+
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            // 获取表单数据
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            // 发送 POST 请求到后端
+            fetch('http://127.0.0.1:5000/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('邮件发送成功！');
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                alert('邮件发送失败，请重试。');
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+</body>
+</html>
